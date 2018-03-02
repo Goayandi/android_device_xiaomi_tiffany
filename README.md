@@ -1,8 +1,8 @@
 ## Device configuration for Xiaomi Mi A1
 
-The Xiaomi Mi A1 (codenamed _"tissot"_) is a mid-range smartphone from Xiaomi.
+The Xiaomi Mi 5X (codenamed _"tiffany"_) is a mid-range smartphone from Xiaomi.
 
-It was announced in September 2017. Release date was September 2017.
+It was announced in July 2017. Release date was August 2017.
 
 ### Device specifications
 
