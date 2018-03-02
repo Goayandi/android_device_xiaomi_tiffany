@@ -18,7 +18,7 @@
 
 set -e
 
-DEVICE=tissot
+DEVICE=tiffany
 VENDOR=xiaomi
 
 # Load extract_utils and do some sanity checks

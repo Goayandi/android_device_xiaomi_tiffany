@@ -18,7 +18,7 @@
 
 set -e
 
-DEVICE=tissot
+DEVICE=tiffany
 VENDOR=xiaomi
 
 INITIAL_COPYRIGHT_YEAR=2017

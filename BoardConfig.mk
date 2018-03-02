@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-LOCAL_PATH := device/xiaomi/tissot
+LOCAL_PATH := device/xiaomi/tiffany
 
 TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/include
 
@@ -44,7 +44,7 @@ BOARD_KERNEL_CMDLINE := ignore_loglevel console=ttyHSL0,115200,n8 androidboot.co
 BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
 BOARD_KERNEL_PAGESIZE :=  2048
 BOARD_MKBOOTIMG_ARGS := --ramdisk_offset 0x01000000 --tags_offset 0x00000100
-TARGET_KERNEL_CONFIG := lineage_tissot_defconfig
+TARGET_KERNEL_CONFIG := lineage_tiffany_defconfig
 TARGET_KERNEL_SOURCE := kernel/xiaomi/msm8953
 
 # ANT
@@ -113,7 +113,7 @@ BOARD_CHARGER_DISABLE_INIT_BLANK := true
 BOARD_USES_CYANOGEN_HARDWARE := true
 BOARD_HARDWARE_CLASS += \
     hardware/cyanogen/cmhw \
-    device/xiaomi/tissot/cmhw
+    device/xiaomi/tiffany/cmhw
 
 # CNE / DPM
 BOARD_USES_QCNE := true
@@ -156,9 +156,9 @@ TARGET_NO_RPC := true
 TARGET_ANDROID_FILESYSTEM_CONFIG_H := $(LOCAL_PATH)/android_filesystem_config.h
 
 # Init
-TARGET_INIT_VENDOR_LIB := libinit_tissot
+TARGET_INIT_VENDOR_LIB := libinit_tiffany
 TARGET_PLATFORM_DEVICE_BASE := /devices/soc/
-TARGET_RECOVERY_DEVICE_MODULES := libinit_tissot
+TARGET_RECOVERY_DEVICE_MODULES := libinit_tiffany
 
 # Keymaster
 TARGET_PROVIDES_KEYMASTER := true
@@ -228,4 +228,4 @@ WIFI_DRIVER_MODULE_PATH := "/system/lib/modules/wlan.ko"
 WIFI_DRIVER_MODULE_NAME := "wlan"
 
 # Inherit from the proprietary version
--include vendor/xiaomi/tissot/BoardConfigVendor.mk
+-include vendor/xiaomi/tiffany/BoardConfigVendor.mk

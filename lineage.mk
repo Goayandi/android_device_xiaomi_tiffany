@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-$(call inherit-product, device/xiaomi/tissot/full_tissot.mk)
+$(call inherit-product, device/xiaomi/tiffany/full_tiffany.mk)
 
 # Inherit some common LineageOS stuff.
 $(call inherit-product, vendor/cm/config/common_full_phone.mk)
@@ -47,11 +47,11 @@ PRODUCT_STATIC_BOOT_CONTROL_HAL := \
     librecovery_updater_msm8953 \
     libsparse_static
 
-PRODUCT_NAME := lineage_tissot
+PRODUCT_NAME := lineage_tiffany
 BOARD_VENDOR := Xiaomi
 
 PRODUCT_GMS_CLIENTID_BASE := android-xiaomi
 
 PRODUCT_BUILD_PROP_OVERRIDES += \
-    BUILD_FINGERPRINT="xiaomi/tissot/tissot_sprout:7.1.2/N2G47H/7.12.19:user/release-keys" \
-    PRIVATE_BUILD_DESC="tissot-user 7.1.2 N2G47H 7.12.19 release-keys"
+    BUILD_FINGERPRINT="xiaomi/tiffany/tiffany:7.1.2/N2G47H/8.2.1:user/release-keys" \
+    PRIVATE_BUILD_DESC="tiffany-user 7.1.2 N2G47H 8.2.1 release-keys"
