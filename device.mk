@@ -21,7 +21,7 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
 #$(call inherit-product-if-exists, vendor/opengapps/build/opengapps-packages.mk)
 
 # Vendors
-$(call inherit-product, vendor/xiaomi/tissot/tissot-vendor.mk)
+$(call inherit-product, vendor/xiaomi/tiffany/tiffany-vendor.mk)
 
 # Overlays
 DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
@@ -33,9 +33,6 @@ PRODUCT_AAPT_PREF_CONFIG := xxhdpi
 # Boot animation
 TARGET_SCREEN_HEIGHT := 1920
 TARGET_SCREEN_WIDTH := 1080
-
-# Update engine
-PRODUCT_PACKAGES += brillo_update_payload
 
 # Permissions
 PRODUCT_COPY_FILES += \
