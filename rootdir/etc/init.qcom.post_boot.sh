@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# Copyright (c) 2012-2013, 2016, The Linux Foundation. All rights reserved.
+# Copyright (c) 2012-2013, 2016-2017 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -67,31 +67,31 @@ function configure_memory_parameters() {
     set_almk_ppr_adj=$(((set_almk_ppr_adj * 6) + 6))
     echo $set_almk_ppr_adj > /sys/module/lowmemorykiller/parameters/adj_max_shift
     echo $set_almk_ppr_adj > /sys/module/process_reclaim/parameters/min_score_adj
-    echo 1 > /sys/module/process_reclaim/parameters/enable_process_reclaim
-    echo 70 > /sys/module/process_reclaim/parameters/pressure_max
-    echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
-    echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
+    #echo 1 > /sys/module/process_reclaim/parameters/enable_process_reclaim
+    #echo 70 > /sys/module/process_reclaim/parameters/pressure_max
+    #echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
+    #echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
     if [ "$arch_type" == "aarch64" ] && [ $MemTotal -gt 2097152 ]; then
-        echo 10 > /sys/module/process_reclaim/parameters/pressure_min
-        echo 1024 > /sys/module/process_reclaim/parameters/per_swap_size
+        #echo 10 > /sys/module/process_reclaim/parameters/pressure_min
+        #echo 1024 > /sys/module/process_reclaim/parameters/per_swap_size
         echo "18432,23040,27648,32256,55296,80640" > /sys/module/lowmemorykiller/parameters/minfree
         echo 81250 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
         adjZeroMinFree=18432
     elif [ "$arch_type" == "aarch64" ] && [ $MemTotal -gt 1048576 ]; then
-        echo 10 > /sys/module/process_reclaim/parameters/pressure_min
-        echo 1024 > /sys/module/process_reclaim/parameters/per_swap_size
+        #echo 10 > /sys/module/process_reclaim/parameters/pressure_min
+        #echo 1024 > /sys/module/process_reclaim/parameters/per_swap_size
         echo "14746,18432,22118,25805,40000,55000" > /sys/module/lowmemorykiller/parameters/minfree
         echo 81250 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
         adjZeroMinFree=14746
     elif [ "$arch_type" == "aarch64" ]; then
-        echo 50 > /sys/module/process_reclaim/parameters/pressure_min
-        echo 512 > /sys/module/process_reclaim/parameters/per_swap_size
+        #echo 50 > /sys/module/process_reclaim/parameters/pressure_min
+        #echo 512 > /sys/module/process_reclaim/parameters/per_swap_size
         echo "14746,18432,22118,25805,40000,55000" > /sys/module/lowmemorykiller/parameters/minfree
         echo 81250 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
         adjZeroMinFree=14746
     else
-        echo 50 > /sys/module/process_reclaim/parameters/pressure_min
-        echo 512 > /sys/module/process_reclaim/parameters/per_swap_size
+        #echo 50 > /sys/module/process_reclaim/parameters/pressure_min
+        #echo 512 > /sys/module/process_reclaim/parameters/per_swap_size
         echo "15360,19200,23040,26880,34415,43737" > /sys/module/lowmemorykiller/parameters/minfree
         echo 53059 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
         adjZeroMinFree=15360
@@ -130,6 +130,31 @@ function configure_memory_parameters() {
         mkswap /data/system/swap/swapfile
         swapon /data/system/swap/swapfile -p 32758
     fi
+}
+
+function set_rt_bandwidth()
+{
+        # The default RT bandwidth setttings for bg_non_interactive cgroup
+        # is 10 msec/1 sec. There should not be any active RT tasks in this
+        # cgroup, so the limited bandwidth is not a concern. But the tasks
+        # in this cgroup can be boosted to RT priority when they acquire a
+        # RT mutex. The RT throttling is exempted for boosted tasks, but when
+        # a kernel debug feature is turned on, we hit panic. We can opt out
+        # of  panic when a RT runqueue has boosted tasks, but that would mean
+        # a task acquiring a RT mutex can run for a very long time without
+        # getting noticed. Instead set the bg_non_interactive cgroup RT
+        # bandwidth settings to same as the root cgroup settings.
+
+        if [ ! -f /dev/cpuctl/bg_non_interactive/cpu.rt_runtime_us ]; then
+              return
+        fi
+
+        if [ ! -f /dev/cpuctl/cpu.rt_runtime_us ]; then
+              return
+        fi
+
+        rt_runtime=`cat /dev/cpuctl/cpu.rt_runtime_us`
+        echo $rt_runtime > /dev/cpuctl/bg_non_interactive/cpu.rt_runtime_us
 }
 
 case "$target" in
@@ -1105,6 +1130,8 @@ esac
 case "$target" in
     "msm8953")
 
+        set_rt_bandwidth
+
         if [ -f /sys/devices/soc0/soc_id ]; then
             soc_id=`cat /sys/devices/soc0/soc_id`
         else
@@ -1118,7 +1145,7 @@ case "$target" in
         fi
 
         case "$soc_id" in
-            "293" | "304" )
+            "293" | "304" | "338" )
 
                 # Start Host based Touch processing
                 case "$hw_platform" in
@@ -1150,7 +1177,7 @@ case "$target" in
                 # spill load is set to 100% by default in the kernel
                 echo 3 > /proc/sys/kernel/sched_spill_nr_run
                 # Apply inter-cluster load balancer restrictions
-                echo 1 > /proc/sys/kernel/sched_restrict_cluster_spill
+                echo 0 > /proc/sys/kernel/sched_restrict_cluster_spill
 
 
                 for devfreq_gov in /sys/class/devfreq/qcom,mincpubw*/governor
@@ -1301,8 +1328,8 @@ case "$target" in
                 echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
 
                 # SMP scheduler
-                echo 85 > /proc/sys/kernel/sched_upmigrate
-                echo 85 > /proc/sys/kernel/sched_downmigrate
+                echo 100 > /proc/sys/kernel/sched_upmigrate
+                echo 100 > /proc/sys/kernel/sched_downmigrate
                 echo 19 > /proc/sys/kernel/sched_upmigrate_min_nice
 
                 # Enable sched guided freq control
@@ -1310,6 +1337,10 @@ case "$target" in
                 echo 1 > /sys/devices/system/cpu/cpufreq/interactive/use_migration_notif
                 echo 200000 > /proc/sys/kernel/sched_freq_inc_notify
                 echo 200000 > /proc/sys/kernel/sched_freq_dec_notify
+
+                #HQ E7-348 add for touch boost start
+                echo 0:1401600 1:1401600 2:1401600 3:1401600 4:1401600 5:1401600 6:1401600 7:1401600 > /sys/module/cpu_boost/parameters/input_boost_freq
+                #HQ E7-348 add for touch boost end
 
                 # Set Memory parameters
                 configure_memory_parameters
@@ -1320,6 +1351,8 @@ esac
 
 case "$target" in
     "msm8937")
+
+        set_rt_bandwidth
 
         if [ -f /sys/devices/soc0/soc_id ]; then
             soc_id=`cat /sys/devices/soc0/soc_id`
@@ -1889,6 +1922,8 @@ esac
 
 case "$target" in
     "msm8996")
+        set_rt_bandwidth
+
         # disable thermal bcl hotplug to switch governor
         echo 0 > /sys/module/msm_thermal/core_control/enabled
         echo -n disable > /sys/devices/soc/soc:qcom,bcl/mode
@@ -2001,25 +2036,9 @@ case "$target" in
 esac
 
 case "$target" in
-    "msmcobalt")
-	soc_revision=`cat /sys/devices/soc0/revision`
-	if [ "$soc_revision" == "1.0" ]; then
-		# Retention modes on v1.x are experimental but not PoR
-		# C2d, D2d, D2e retention modes are disbled
-		echo N > /sys/module/lpm_levels/system/pwr/cpu0/ret/idle_enabled
-		echo N > /sys/module/lpm_levels/system/pwr/cpu1/ret/idle_enabled
-		echo N > /sys/module/lpm_levels/system/pwr/cpu2/ret/idle_enabled
-		echo N > /sys/module/lpm_levels/system/pwr/cpu3/ret/idle_enabled
-		echo N > /sys/module/lpm_levels/system/perf/cpu4/ret/idle_enabled
-		echo N > /sys/module/lpm_levels/system/perf/cpu5/ret/idle_enabled
-		echo N > /sys/module/lpm_levels/system/perf/cpu6/ret/idle_enabled
-		echo N > /sys/module/lpm_levels/system/perf/cpu7/ret/idle_enabled
-		echo N > /sys/module/lpm_levels/system/pwr/pwr-l2-dynret/idle_enabled
-		echo N > /sys/module/lpm_levels/system/pwr/pwr-l2-ret/idle_enabled
-		echo N > /sys/module/lpm_levels/system/perf/perf-l2-dynret/idle_enabled
-		echo N > /sys/module/lpm_levels/system/perf/perf-l2-ret/idle_enabled
-		#Enable all LPMs by default
-	fi
+    "msm8998")
+
+        set_rt_bandwidth
 
 	echo 2 > /sys/devices/system/cpu/cpu4/core_ctl/min_cpus
 	echo 60 > /sys/devices/system/cpu/cpu4/core_ctl/busy_up_thres
@@ -2038,6 +2057,12 @@ case "$target" in
 	echo 5 > /proc/sys/kernel/sched_spill_nr_run
 	echo 1 > /proc/sys/kernel/sched_restrict_cluster_spill
 	start iop
+
+        # disable thermal bcl hotplug to switch governor
+        echo 0 > /sys/module/msm_thermal/core_control/enabled
+
+        # online CPU0
+        echo 1 > /sys/devices/system/cpu/cpu0/online
 	# configure governor settings for little cluster
 	echo "interactive" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
 	echo 1 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/use_sched_load
@@ -2052,6 +2077,8 @@ case "$target" in
 	echo 79000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/max_freq_hysteresis
 	echo 300000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 	echo 1 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/ignore_hispeed_on_notif
+        # online CPU4
+        echo 1 > /sys/devices/system/cpu/cpu4/online
 	# configure governor settings for big cluster
 	echo "interactive" > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
 	echo 1 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/use_sched_load
@@ -2066,6 +2093,9 @@ case "$target" in
 	echo 79000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/max_freq_hysteresis
 	echo 300000 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
 	echo 1 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/ignore_hispeed_on_notif
+
+        # re-enable thermal and BCL hotplug
+        echo 1 > /sys/module/msm_thermal/core_control/enabled
 
         # Enable input boost configuration
         echo "0:1324800" > /sys/module/cpu_boost/parameters/input_boost_freq
@@ -2109,7 +2139,7 @@ case "$target" in
 	fi
 
 	case "$soc_id" in
-		"292") #msmcobalt
+		"292") #msm8998
 		# Start Host based Touch processing
 		case "$hw_platform" in
 		"QRD")
@@ -2118,12 +2148,27 @@ case "$target" in
 		esac
 	    ;;
 	esac
+
+	echo N > /sys/module/lpm_levels/system/pwr/cpu0/ret/idle_enabled
+	echo N > /sys/module/lpm_levels/system/pwr/cpu1/ret/idle_enabled
+	echo N > /sys/module/lpm_levels/system/pwr/cpu2/ret/idle_enabled
+	echo N > /sys/module/lpm_levels/system/pwr/cpu3/ret/idle_enabled
+	echo N > /sys/module/lpm_levels/system/perf/cpu4/ret/idle_enabled
+	echo N > /sys/module/lpm_levels/system/perf/cpu5/ret/idle_enabled
+	echo N > /sys/module/lpm_levels/system/perf/cpu6/ret/idle_enabled
+	echo N > /sys/module/lpm_levels/system/perf/cpu7/ret/idle_enabled
+	echo N > /sys/module/lpm_levels/system/pwr/pwr-l2-dynret/idle_enabled
+	echo N > /sys/module/lpm_levels/system/pwr/pwr-l2-ret/idle_enabled
+	echo N > /sys/module/lpm_levels/system/perf/perf-l2-dynret/idle_enabled
+	echo N > /sys/module/lpm_levels/system/perf/perf-l2-ret/idle_enabled
 	echo N > /sys/module/lpm_levels/parameters/sleep_disabled
     ;;
 esac
 
 case "$target" in
     "msm8909")
+
+        set_rt_bandwidth
 
         if [ -f /sys/devices/soc0/soc_id ]; then
            soc_id=`cat /sys/devices/soc0/soc_id`
@@ -2233,7 +2278,7 @@ case "$target" in
         start mpdecision
         echo 512 > /sys/block/mmcblk0/bdi/read_ahead_kb
     ;;
-    "msm8994" | "msm8992" | "msm8996" | "msmcobalt")
+    "msm8994" | "msm8992" | "msm8996" | "msm8998")
         setprop sys.post_boot.parsed 1
     ;;
     "apq8084")
@@ -2309,6 +2354,15 @@ case "$target" in
         echo 5120 > /proc/sys/vm/min_free_kbytes
      ;;
 esac
+
+
+#judge version,user or other
+version_type=`getprop ro.build.type`
+if [ "$version_type" == "user" ] ; then
+    echo 2 > /sys/module/lowmemorykiller/parameters/get_version
+else
+    echo 3 > /sys/module/lowmemorykiller/parameters/get_version
+fi
 
 # Let kernel know our image version/variant/crm_version
 if [ -f /sys/devices/soc0/select_image ]; then

@@ -1,7 +1,3 @@
-#
-# system.prop for tiffany
-#
-
 # Audio
 voice.playback.conc.disabled=true
 voice.record.conc.disabled=false
@@ -143,7 +139,6 @@ rild.libpath=/vendor/lib64/libril-qc-qmi-1.so
 rild.libargs=-d /dev/smd0
 ril.subscription.types=NV,RUIM
 DEVICE_PROVISIONED=1
-ro.telephony.ril_class=MidoRIL
 ro.telephony.default_network=22,20
 ro.telephony.call_ring.multiple=false
 persist.radio.multisim.config=dsds
@@ -167,6 +162,9 @@ persist.radio.sw_mbn_update=0
 persist.radio.hw_mbn_update=0
 service.qti.ims.enabled=1
 telephony.lteOnCdmaDevice=1
+
+# SdcardFs
+ro.sys.sdcardfs=true
 
 # Time Services
 persist.timed.enable=true

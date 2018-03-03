@@ -1,4 +1,4 @@
-#
+##
 # Copyright (C) 2017 The LineageOS Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,16 +14,25 @@
 # limitations under the License.
 #
 
-$(call inherit-product, device/xiaomi/tiffany/full_tiffany.mk)
+# Inherit from those products. Most specific first.
+$(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 
-# Inherit some common LineageOS stuff.
+# Inherit some common lineage stuff.
 $(call inherit-product, vendor/cm/config/common_full_phone.mk)
 
+# Inherit from tiffany device
+$(call inherit-product, $(LOCAL_PATH)/device.mk)
+
+PRODUCT_BRAND := Xiaomi
+PRODUCT_DEVICE := tiffany
+PRODUCT_MANUFACTURER := Xiaomi
 PRODUCT_NAME := lineage_tiffany
-BOARD_VENDOR := Xiaomi
+PRODUCT_MODEL := MI 5X
 
 PRODUCT_GMS_CLIENTID_BASE := android-xiaomi
 
+TARGET_VENDOR_PRODUCT_NAME := tiffany
+
 PRODUCT_BUILD_PROP_OVERRIDES += \
-    BUILD_FINGERPRINT="xiaomi/tiffany/tiffany:7.1.2/N2G47H/8.2.1:user/release-keys" \
-    PRIVATE_BUILD_DESC="tiffany-user 7.1.2 N2G47H 8.2.1 release-keys"
+ BUILD_FINGERPRINT="xiaomi/tiffany/tiffany:7.1.2/N2G47H/8.2.28:user/release-keys"

@@ -21,14 +21,6 @@
          Software implementation will be used if config_hardware_auto_brightness_available is not set -->
     <bool name="config_automatic_brightness_available">true</bool>
 
-    <!-- Stability requirements in milliseconds for accepting a new brightness level.  This is used
-         for debouncing the light sensor.  Different constants are used to debounce the light sensor
-         when adapting to brighter or darker environments.  This parameter controls how quickly
-         brightness changes occur in response to an observed change in light level that exceeds the
-         hysteresis threshold. -->
-    <integer name="config_autoBrightnessBrighteningLightDebounce">2000</integer>
-    <integer name="config_autoBrightnessDarkeningLightDebounce">4000</integer>
-
     <!-- Array of light sensor LUX values to define our levels for auto backlight brightness support.
          The N entries of this array define N + 1 control points as follows:
          (1-based arrays)
@@ -46,31 +38,30 @@
          backlight values for LUX levels between these control points.
          Must be overridden in platform specific overlays -->
     <integer-array name="config_autoBrightnessLevels">
-    	
-         <item>1</item>
-         <item>2</item>
-         <item>3</item>
-         <item>4</item>
-         <item>5</item>
-         <item>6</item>
-         <item>8</item>
-         <item>13</item>
-         <item>17</item>
-         <item>21</item>
-         <item>26</item>
-         <item>30</item>
-         <item>34</item>
-         <item>140</item>
-         <item>310</item>
-         <item>400</item>
-         <item>500</item>
-         <item>600</item>
-         <item>1000</item>
-         <item>1200</item>
-         <item>1500</item>
-         <item>3000</item>
-         <item>3500</item>
-         <item>4000</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>8</item>
+        <item>13</item>
+        <item>17</item>
+        <item>21</item>
+        <item>26</item>
+        <item>30</item>
+        <item>34</item>
+        <item>140</item>
+        <item>310</item>
+        <item>400</item>
+        <item>500</item>
+        <item>600</item>
+        <item>1000</item>
+        <item>1200</item>
+        <item>1500</item>
+        <item>3000</item>
+        <item>3500</item>
+        <item>4000</item>
     </integer-array>
 
     <!-- Array of output values for LCD backlight corresponding to the LUX values
@@ -79,37 +70,37 @@
          The brightness values must be between 0 and 255 and be non-decreasing.
          This must be overridden in platform specific overlays -->
     <integer-array name="config_autoBrightnessLcdBacklightValues">
-         <item>2</item>
-         <item>2</item>
-         <item>2</item>
-         <item>3</item>
-         <item>3</item>
-         <item>5</item>
-         <item>5</item>
-         <item>12</item>
-         <item>12</item>
-         <item>20</item>
-         <item>20</item>
-         <item>39</item>
-         <item>39</item>
-         <item>43</item>
-         <item>43</item>
-         <item>55</item>
-         <item>55</item>
-         <item>63</item>
-         <item>63</item>
-         <item>84</item>
-         <item>93</item>
-         <item>105</item>
-         <item>200</item>
-         <item>240</item>
-         <item>255</item>
+        <item>3</item>
+        <item>3</item>
+        <item>3</item>
+        <item>6</item>
+        <item>6</item>
+        <item>6</item>
+        <item>6</item>
+        <item>20</item>
+        <item>20</item>
+        <item>20</item>
+        <item>20</item>
+        <item>43</item>
+        <item>43</item>
+        <item>43</item>
+        <item>43</item>
+        <item>55</item>
+        <item>55</item>
+        <item>63</item>
+        <item>63</item>
+        <item>84</item>
+        <item>93</item>
+        <item>105</item>
+        <item>200</item>
+        <item>240</item>
+        <item>255</item>
     </integer-array>
 
     <!-- Screen brightness used to dim the screen when the user activity
          timeout expires.  May be less than the minimum allowed brightness setting
          that can be set by the user. -->
-    <integer name="config_screenBrightnessDim">10</integer>
+    <integer name="config_screenBrightnessDim">1</integer>
 
     <!-- Minimum screen brightness setting allowed by the power manager.
          The user is forbidden from setting the brightness below this level. -->
@@ -123,18 +114,12 @@
 
     <!-- Is the notification LED intrusive? Used to decide if there should be a disable option -->
     <bool name="config_intrusiveNotificationLed">true</bool>
- 
-    <!-- Default value for led color when battery is low on charge -->
-    <integer name="config_notificationsBatteryLowARGB">0xFFFFFFFF</integer>
-
-    <!-- Default value for led color when battery is medium charged -->
-    <integer name="config_notificationsBatteryMediumARGB">0xFFFFFFFF</integer>
-
-    <!-- Default value for led color when battery is fully charged -->
-    <integer name="config_notificationsBatteryFullARGB">0xFFFFFFFF</integer>
 
     <!-- Is the battery LED intrusive? Used to decide if there should be a disable option -->
     <bool name="config_intrusiveBatteryLed">true</bool>
+
+    <!-- Configuration to support SIM contact batch operation -->
+    <bool name="config_sim_phonebook_batch_operation">false</bool>
 
     <!-- When true use the linux /dev/input/event subsystem to detect the switch changes
          on the headphone/microphone jack. When false use the older uevent framework. -->
@@ -142,9 +127,6 @@
 
     <!-- If this is true, the screen will come on when you unplug usb/power/whatever. -->
     <bool name="config_unplugTurnsOnScreen">true</bool>
- 
-    <!-- Enable Night display, which requires HWC 2.0. -->
-    <bool name="config_nightDisplayAvailable">true</bool>
 
     <!-- Set to true to add links to Cell Broadcast app from Settings and MMS app. -->
     <bool name="config_cellBroadcastAppLinks">true</bool>
@@ -163,20 +145,6 @@
          config to 7. -->
     <integer name="config_deviceHardwareKeys">83</integer>
 
-    <!-- Hardware keys present on the device with the ability to wake, stored as a bit field.
-         This integer should equal the sum of the corresponding value for each
-         of the following keys present:
-             1 - Home
-             2 - Back
-             4 - Menu
-             8 - Assistant (search)
-            16 - App switch
-            32 - Camera
-            64 - Volume rocker
-         For example, a device with Home, Back and Menu keys would set this
-         config to 7. -->
-    <integer name="config_deviceHardwareWakeKeys">65</integer>
-
     <!-- Control the behavior when the user long presses the home button.
             0 - Nothing
             1 - Menu key
@@ -189,33 +157,6 @@
     -->
     <integer name="config_longPressOnHomeBehavior">3</integer>
 
-    <!-- Control the behavior when the user long presses the app switch button.
-            0 - Nothing
-            1 - Menu key
-            2 - Recent apps view in SystemUI
-            3 - Launch assist intent
-            4 - Voice Search
-            5 - In-app Search
-            6 - Launch camera
-            7 - Turn screen off
-            8 - Last app
-         This needs to match the constants in
-         services/core/java/com/android/server/policy/PhoneWindowManager.java
-    -->
-    <integer name="config_longPressOnAppSwitchBehavior">1</integer>
- 
-    <!-- Override the default detection behavior for the framework method
-         android.view.ViewConfiguration#hasPermanentMenuKey().
-         Valid settings are:
-         0 - No change. Use the default autodetection behavior.
-         1 - The device DOES have a permanent menu key; ignore autodetection.
-         2 - The device DOES NOT have a permanent menu key; ignore autodetection. -->
-    <integer name="config_overrideHasPermanentMenuKey">2</integer>
-    
-    <!-- Whether a software navigation bar should be shown. NOTE: in the future this may be
-         autodetected from the Configuration. -->
-    <bool name="config_showNavigationBar">false</bool>
- 
     <!-- Wifi driver supports batched scan -->
     <bool translatable="false" name="config_wifi_batched_scan_supported">true</bool>
 
@@ -292,7 +233,6 @@
     <integer-array translatable="false" name="config_tether_upstream_types">
         <item>0</item>
         <item>1</item>
-        <item>4</item>
         <item>5</item>
         <item>7</item>
     </integer-array>
@@ -348,11 +288,6 @@
     <!-- Flag specifying whether VT is available on device -->
     <bool name="config_device_vt_available">true</bool>
 
-    <!-- Flag specifying whether VT should be available for carrier: independent of
-         carrier provisioning. If false: hard disabled. If true: then depends on carrier
-         provisioning, availability etc -->
-    <bool name="config_carrier_vt_available">true</bool>
-
     <!-- Config determines whether to update phone object when voice registration
          state changes. Voice radio tech change will always trigger an update of
          phone object irrespective of this config -->
@@ -399,9 +334,6 @@
          May be less than the minimum allowed brightness setting
          that can be set by the user. -->
     <integer name="config_screenBrightnessDoze">17</integer>
-    
-    <!-- Whether the always on display mode is available. -->
-<!--    <bool name="config_dozeAlwaysOnDisplayAvailable">true</bool> -->
 
     <!-- If true, the doze component is not started until after the screen has been
          turned off and the screen off animation has been performed. -->
@@ -456,18 +388,41 @@
     <!-- Flag specifying whether WFC over IMS is available on device -->
     <bool name="config_device_wfc_ims_available">true</bool>
 
-    <!-- Support in Surfaceflinger for blur layers.
-         NOTE: This requires additional hardware-specific code. -->
-    <bool name="config_uiBlurEnabled">true</bool>
-
     <!-- Whether notify fingerprint client of successful cancelled authentication -->
     <bool name="config_notifyClientOnFingerprintCancelSuccess">true</bool>
 
-    <!-- If enabled, capacitive keys will only light up when pressed.
-         Otherwise, the buttons will light up whenever the user interacts with the device -->
-    <bool name="config_buttonLightOnKeypressOnly">true</bool>
-
     <!-- Whether device supports double tap to wake -->
-    <bool name="config_supportDoubleTapWake">false</bool>
-
+    <bool name="config_supportDoubleTapWake">true</bool>
+	
+    <!-- Display low battery warning when battery level dips to this value -->
+    <integer name="config_lowBatteryWarningLevel">0</integer>
+	
+	<!-- Control whether Night display is available. This should only be enabled on devices with HWC 2.0 or higher. -->
+    <bool name="config_nightDisplayAvailable">true</bool>
+	
+    <!-- True if Unprocessed audio source supports the required frequency range and level -->
+    <bool name="config_supportAudioSourceUnprocessed">true</bool>
+	
+    <!-- Boolean indicating whether 802.11r Fast BSS Transition is enabled on this platform -->
+    <bool translatable="false" name="config_wifi_fast_bss_transition_enabled">true</bool>
+    <!-- Button illumination -->
+    <bool name="config_deviceHasVariableButtonBrightness">true</bool>
+    <integer name="config_buttonBrightnessSettingDefault">50</integer>
+	
+    <!-- Default list of files pinned by the Pinner Service -->
+    <string-array translatable="false" name="config_defaultPinnerServiceFiles">
+        <item>/data/dalvik-cache/arm64/system@framework@boot.oat</item>
+        <item>/data/dalvik-cache/arm/system@framework@boot.oat</item>
+        <item>/data/dalvik-cache/arm64/system@framework@services.jar@classes.dex</item>
+        <item>/data/dalvik-cache/arm/system@framework@services.jar@classes.dex</item>
+        <item>/system/framework/arm64/boot.oat</item>
+        <item>/system/framework/arm/boot.oat</item>
+        <item>/system/framework/oat/arm64/services.odex</item>
+        <item>/system/framework/oat/arm/services.odex</item>
+        <item>/system/framework/arm64/boot-framework.oat</item>
+        <item>/system/framework/arm/boot-framework.oat</item>
+        <item>/system/framework/arm64/boot-core-libart.oat</item>
+        <item>/system/framework/arm/boot-core-libart.oat</item>
+    </string-array>
+	
 </resources>

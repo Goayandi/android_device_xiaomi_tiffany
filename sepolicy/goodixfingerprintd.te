@@ -1,29 +1,48 @@
 type goodixfingerprintd, domain;
 
-allow debuggerd goodixfingerprintd:process { getattr ptrace };
-allow fingerprintd goodixfingerprintd:binder { transfer call };
-allow fingerprintd goodixfingerprintd:fd use;
-allow goodixfingerprintd goodixfingerprintd:capability { dac_read_search dac_override };
-allow goodixfingerprintd goodixfingerprintd:dir { search read lock getattr ioctl open };
-allow goodixfingerprintd goodixfingerprintd:fd use;
-allow goodixfingerprintd goodixfingerprintd:fifo_file { read lock getattr write ioctl open append };
-allow goodixfingerprintd goodixfingerprintd:file { read lock getattr write ioctl open append };
-allow goodixfingerprintd goodixfingerprintd:lnk_file { read lock ioctl open getattr };
-allow goodixfingerprintd goodixfingerprintd:netlink_socket { setopt read bind create write getattr };
-allow goodixfingerprintd goodixfingerprintd:process { fork getsession sigkill sigchld setpgid setsched signal getattr setcap sigstop execmem getcap getpgid getsched signull setrlimit };
-allow goodixfingerprintd goodixfingerprintd:unix_dgram_socket { setopt setattr read lock create sendto getattr write ioctl connect shutdown bind getopt append };
-allow goodixfingerprintd goodixfingerprintd:unix_stream_socket { connectto setopt setattr read lock create getattr accept write ioctl connect shutdown bind getopt append listen };
-allow init goodixfingerprintd:process { siginh rlimitinh transition noatsecure };
-allow servicemanager goodixfingerprintd:binder transfer;
-allow servicemanager goodixfingerprintd:dir search;
-allow servicemanager goodixfingerprintd:file { read open };
-allow servicemanager goodixfingerprintd:process getattr;
-allow system_app goodixfingerprintd:binder { transfer call };
-allow system_app goodixfingerprintd:fd use;
-allow system_server goodixfingerprintd:binder { transfer call };
-allow system_server goodixfingerprintd:fd use;
+init_daemon_domain(goodixfingerprintd)
 
-type goodixfingerprintd_exec, file_type, exec_type;
 
-allow goodixfingerprintd goodixfingerprintd_exec:file { read open getattr entrypoint execute };
-allow init goodixfingerprintd_exec:file { read getattr open execute };
+# need to find KeyStore and add self
+allow goodixfingerprintd goodixfingerprintd_service:service_manager { add find };
+
+# allow HAL module to read dir contents
+allow goodixfingerprintd goodixfingerprintd_data_file:file { create_file_perms };
+
+file_type_auto_trans(goodixfingerprintd,system_data_file,goodixfingerprintd_data_file);
+
+# For permissions checking
+binder_use(goodixfingerprintd)
+binder_call(goodixfingerprintd, system_server);
+binder_call(goodixfingerprintd, fingerprintd);
+binder_call(goodixfingerprintd, system_app);
+
+# goodix fingerprint
+allow goodixfingerprintd permission_service:service_manager find;
+allow goodixfingerprintd self:process execmem;
+allow goodixfingerprintd fuse:dir create_dir_perms;
+allow goodixfingerprintd fuse:file create_file_perms;
+allow goodixfingerprintd self:capability { dac_override dac_read_search };
+
+# Access fingerprint devices at all.
+allow goodixfingerprintd goodixfingerprintd_device:chr_file rw_file_perms;
+
+#for netlink use
+allow goodixfingerprintd self:netlink_socket { read bind create write getattr setopt };
+
+allow goodixfingerprintd fingerprint_service:service_manager { find };
+
+# allow sdcard access right
+allow goodixfingerprintd media_rw_data_file:dir { search write add_name };
+allow goodixfingerprintd media_rw_data_file:file { create write open read getattr };
+
+#allow for power manager
+allow goodixfingerprintd power_service:service_manager { find };
+allow goodixfingerprintd goodixfingerprintd:capability { net_admin };
+
+#goodixfingerpri: type=1400 audit(0.0:21): avc: denied { getattr } for path="/vendor" dev="rootfs" ino=5427 #scontext=u:r:goodixfingerprintd:s0 tcontext=u:object_r:rootfs:s0 tclass=lnk_file permissive=0
+
+userdebug_or_eng(`
+# the next line is not used in beanpod, but it will be needed defaultly in factory test
+allow goodixfingerprintd kernel:system module_request;
+')
