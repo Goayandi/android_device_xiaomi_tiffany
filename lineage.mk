@@ -17,7 +17,40 @@
 $(call inherit-product, device/xiaomi/tiffany/full_tiffany.mk)
 
 # Inherit some common LineageOS stuff.
-$(call inherit-product, vendor/cm/config/common_full_phone.mk)
+$(call inherit-product, vendor/lineage/config/common_full_phone.mk)
+
+# A/B updater
+AB_OTA_UPDATER := true
+
+AB_OTA_PARTITIONS += \
+    boot \
+    system
+
+AB_OTA_POSTINSTALL_CONFIG += \
+    RUN_POSTINSTALL_system=true \
+    POSTINSTALL_PATH_system=system/bin/otapreopt_script \
+    FILESYSTEM_TYPE_system=ext4 \
+    POSTINSTALL_OPTIONAL_system=true
+
+PRODUCT_PACKAGES += \
+    otapreopt_script \
+    update_engine \
+    update_engine_sideload \
+    update_verifier
+
+# The following modules are included in debuggable builds only.
+PRODUCT_PACKAGES_DEBUG += \
+    bootctl \
+    update_engine_client
+
+# Boot control HAL
+PRODUCT_PACKAGES += \
+    bootctrl.qcom
+
+PRODUCT_STATIC_BOOT_CONTROL_HAL := \
+    bootctrl.qcom \
+    libgptutils \
+    libz
 
 PRODUCT_NAME := lineage_tiffany
 BOARD_VENDOR := Xiaomi
@@ -25,5 +58,5 @@ BOARD_VENDOR := Xiaomi
 PRODUCT_GMS_CLIENTID_BASE := android-xiaomi
 
 PRODUCT_BUILD_PROP_OVERRIDES += \
-    BUILD_FINGERPRINT="xiaomi/tiffany/tiffany:7.1.2/N2G47H/8.2.1:user/release-keys" \
-    PRIVATE_BUILD_DESC="tiffany-user 7.1.2 N2G47H 8.2.1 release-keys"
+    BUILD_FINGERPRINT="xiaomi/tiffany/tiffany:7.1.2/N2G47H/8.2.28:user/release-keys" \
+

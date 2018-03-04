@@ -16,7 +16,7 @@
 
 #ifndef _BDROID_BUILDCFG_H
 #define _BDROID_BUILDCFG_H
-#define BTM_DEF_LOCAL_NAME   "Xiaomi MI 5X"
+#define BTM_DEF_LOCAL_NAME   "Xiaomi Mi 5X"
 // Disables read remote device feature
 #define BTA_SKIP_BLE_READ_REMOTE_FEAT FALSE
 #define MAX_ACL_CONNECTIONS    7
@@ -26,6 +26,7 @@
 #define BTA_BLE_SKIP_CONN_UPD  FALSE
 #define BLE_PERIPHERAL_ADV_NAME  FALSE
 #define BT_CLEAN_TURN_ON_DISABLED 1
+#define BTM_SCO_ENHANCED_SYNC_DISABLED TRUE
 
 #define BTA_DISABLE_DELAY 1000 /* in milliseconds */
 #define BTM_WBS_INCLUDED TRUE
