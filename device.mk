@@ -358,9 +358,6 @@ PRODUCT_BOOT_JARS += \
 PRODUCT_PACKAGES += \
     textclassifier.smartselection.bundle1
 
-# Update engine
-PRODUCT_PACKAGES += brillo_update_payload
-
 # USB HAL
 PRODUCT_PACKAGES += \
     android.hardware.usb@1.0-service
