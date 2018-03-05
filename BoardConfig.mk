@@ -241,4 +241,4 @@ WIFI_DRIVER_OPERSTATE_PATH := "/sys/class/net/wlan0/operstate"
 WIFI_HIDL_FEATURE_AWARE := true
 
 # Inherit from the proprietary version
--include vendor/xiaomi/tiffany/BoardConfigVendor.mk
+-include vendor/xiaomi/tiffany/tissot-vendor.mk
