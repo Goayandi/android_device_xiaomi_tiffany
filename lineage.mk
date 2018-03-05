@@ -1,4 +1,4 @@
-#
+##
 # Copyright (C) 2017 The LineageOS Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,52 +14,25 @@
 # limitations under the License.
 #
 
-$(call inherit-product, device/xiaomi/tissot/full_tissot.mk)
+# Inherit from those products. Most specific first.
+$(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 
-# Inherit some common LineageOS stuff.
-$(call inherit-product, vendor/lineage/config/common_full_phone.mk)
+# Inherit some common lineage stuff.
+$(call inherit-product, vendor/cm/config/common_full_phone.mk)
 
-# A/B updater
-AB_OTA_UPDATER := true
+# Inherit from tiffany device
+$(call inherit-product, $(LOCAL_PATH)/device.mk)
 
-AB_OTA_PARTITIONS += \
-    boot \
-    system
-
-AB_OTA_POSTINSTALL_CONFIG += \
-    RUN_POSTINSTALL_system=true \
-    POSTINSTALL_PATH_system=system/bin/otapreopt_script \
-    FILESYSTEM_TYPE_system=ext4 \
-    POSTINSTALL_OPTIONAL_system=true
-
-PRODUCT_PACKAGES += \
-    otapreopt_script \
-    update_engine \
-    update_engine_sideload \
-    update_verifier
-
-# The following modules are included in debuggable builds only.
-PRODUCT_PACKAGES_DEBUG += \
-    bootctl \
-    update_engine_client
-
-# Boot control HAL
-PRODUCT_PACKAGES += \
-    bootctrl.qcom
-
-PRODUCT_STATIC_BOOT_CONTROL_HAL := \
-    bootctrl.qcom \
-    libgptutils \
-    libz
-
-PRODUCT_NAME := lineage_tissot
-BOARD_VENDOR := Xiaomi
+PRODUCT_BRAND := Xiaomi
+PRODUCT_DEVICE := tiffany
+PRODUCT_MANUFACTURER := Xiaomi
+PRODUCT_NAME := lineage_tiffany
+PRODUCT_MODEL := MI 5X
 
 PRODUCT_GMS_CLIENTID_BASE := android-xiaomi
 
-PRODUCT_BUILD_PROP_OVERRIDES += \
-    BUILD_FINGERPRINT="xiaomi/tissot/tissot_sprout:8.0.0/OPR1.170623.026/8.1.10:user/release-keys" \
-    PRIVATE_BUILD_DESC="tissot-user 8.0.0 OPR1.170623.026 8.1.10 release-keys"
+TARGET_VENDOR_PRODUCT_NAME := tiffany
 
-# Unofficial build ID
-TARGET_UNOFFICIAL_BUILD_ID := TEAMOREO
+PRODUCT_BUILD_PROP_OVERRIDES += \
+ BUILD_FINGERPRINT="xiaomi/tiffany/tiffany:7.1.2/N2G47H/8.2.28:user/release-keys"
