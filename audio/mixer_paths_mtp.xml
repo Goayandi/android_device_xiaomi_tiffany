@@ -287,7 +287,6 @@
 
     <path name="deep-buffer-playback speaker">
         <ctl name="QUIN_MI2S_RX Audio Mixer MultiMedia1" value="1" />
-		<ctl name="PRI_MI2S_RX Audio Mixer MultiMedia1" value="1" />
     </path>
 
     <path name="deep-buffer-playback speaker-and-headphones">
@@ -336,7 +335,6 @@
 
     <path name="low-latency-playback speaker">
         <ctl name="QUIN_MI2S_RX Audio Mixer MultiMedia5" value="1" />
-		<ctl name="PRI_MI2S_RX Audio Mixer MultiMedia5" value="1" />
     </path>
 
     <path name="low-latency-playback speaker-and-headphones">
@@ -436,7 +434,6 @@
 
     <path name="compress-offload-playback speaker">
         <ctl name="QUIN_MI2S_RX Audio Mixer MultiMedia4" value="1" />
-		<ctl name="PRI_MI2S_RX Audio Mixer MultiMedia4" value="1" />
     </path>
 
     <path name="compress-offload-playback speaker-and-headphones">
@@ -1147,11 +1144,6 @@
         <ctl name="Speaker Volume" value="5" />
         <ctl name="Digital Gain" value="56" />
         <ctl name="Left Channel Enable" value="1" />
-		<ctl name="RX1 MIX1 INP1" value="RX1" />
-        <ctl name="RDAC2 MUX" value="RX1" />
-        <ctl name="RX1 Digital Volume" value="84" />
-        <ctl name="EAR PA Gain" value="POS_6_DB" />
-        <ctl name="EAR_S" value="Switch" />
     </path>
 
     <path name="speaker-and-hdmi">
